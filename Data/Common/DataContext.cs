@@ -11,11 +11,11 @@ namespace StudentsCoursesManager.Data.Common
 
         }
 
-        DbSet<Student> Students { get; set; }
-        DbSet<Course> Courses { get; set; }
-        DbSet<StudentCourse> StudentCourses { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<StudentCourse> StudentCourses { get; set; }
 
-        DbSet<StudentCourse> Genders { get; set; }
+        public DbSet<StudentCourse> Genders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

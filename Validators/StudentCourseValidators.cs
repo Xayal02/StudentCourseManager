@@ -2,23 +2,24 @@
 using StudentsCoursesManager.Data.Common;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Data.UnitOfWork;
+using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Data.Validators
 {
-    public class StudentCourseValidators:AbstractValidator<StudentCourse>
+    public class StudentCourseValidators:AbstractValidator<StudentCourseModel>
     {
         IUnitOfWork _unitOfWork;
         public StudentCourseValidators(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
 
-            RuleFor(sc => sc.StudentId)
-                .MustAsync(IsStudentExistAsync)
-                .WithMessage(sc=> $"Student with {sc.StudentId} id doesn't exist");
+            //RuleFor(sc => sc.StudentId)
+            //    .MustAsync(IsStudentExistAsync)
+            //    .WithMessage(sc=> $"Student with {sc.StudentId} id doesn't exist");
 
-            RuleFor(sc => sc.CourseId)
-                .MustAsync(IsCourseExistAsync)
-                .WithMessage(sc=> $"Course with {sc.CourseId} id doesn't exist");
+            //RuleFor(sc => sc.CourseId)
+            //    .MustAsync(IsCourseExistAsync)
+            //    .WithMessage(sc=> $"Course with {sc.CourseId} id doesn't exist");
 
         }
 

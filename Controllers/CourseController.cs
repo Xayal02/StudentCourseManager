@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Data.UnitOfWork;
+using StudentsCoursesManager.Helpers.Exceptions;
 using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Controllers
@@ -33,16 +34,19 @@ namespace StudentsCoursesManager.Controllers
         }
 
         [HttpGet("Get Course By Id")]
-        public async Task<IActionResult> GetCourseById(int id)
+        public async Task<IActionResult> GetCourseById(int id, CancellationToken cancellationToken)
         {
             var course = await _unitOfWork.CourseRepository.Find(id);
+
+            if(course is null)  return NotFound();
+
             var courseModel = _mapper.Map<CourseModel>(course);
 
             return Ok(courseModel);
         }
 
         [HttpPost("Create Course")]
-        public async Task<IActionResult> CreateStudent([FromBody] CourseModel courseModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
+        public async Task<IActionResult> CreateCourse([FromBody] CourseModel courseModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +70,8 @@ namespace StudentsCoursesManager.Controllers
 
                 var course = await _unitOfWork.CourseRepository.Find(id);
 
+                if (course is null) return NotFound();
+
                 _mapper.Map(courseModel, course);
 
                 await _unitOfWork.CourseRepository.Update(course);
@@ -80,6 +86,8 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var course = await _unitOfWork.CourseRepository.Find(id);
+
+            if (course is null) return NotFound();
 
             await _unitOfWork.CourseRepository.Delete(course);
             await _unitOfWork.Save();

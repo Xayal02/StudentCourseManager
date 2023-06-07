@@ -37,7 +37,10 @@ namespace StudentsCoursesManager.Controllers
         [HttpGet("Get Student By Id")]
         public async Task<IActionResult> GetStudentById(int id)
         {
-            var student =await _unitOfWork.StudentRepository.Find(id);
+            var student = await _unitOfWork.StudentRepository.Find(id);
+
+            if (student is null) return NotFound();
+
             var studentModel =  _mapper.Map<StudentModel>(student);
 
             return Ok(studentModel);
@@ -70,6 +73,8 @@ namespace StudentsCoursesManager.Controllers
 
                 var student = await _unitOfWork.StudentRepository.Find(id);
 
+                if (student is null) return NotFound();
+
                 _mapper.Map(studentModel, student);
 
                 await _unitOfWork.StudentRepository.Update(student);
@@ -84,6 +89,8 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var student = await _unitOfWork.StudentRepository.Find(id);
+
+            if (student is null) return NotFound();
 
             await _unitOfWork.StudentRepository.Delete(student);
             await _unitOfWork.Save();
