@@ -13,9 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudentsCoursesManager.Controllers
 {
-    [Authorize("AdminOnly")]
-
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Policy = "AuthenticatedUser")]
     public class StudentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -50,6 +48,7 @@ namespace StudentsCoursesManager.Controllers
             return Ok(studentModel);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("Create Student")]
         public async Task<IActionResult> CreateStudent([FromBody] StudentModel studentModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
@@ -67,6 +66,8 @@ namespace StudentsCoursesManager.Controllers
             return apiBehaviour.Value.InvalidModelStateResponseFactory(ControllerContext);
         }
 
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("Update Student")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentModel studentModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
@@ -89,6 +90,8 @@ namespace StudentsCoursesManager.Controllers
 
         }
 
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete("Delete Student")]
         public async Task<IActionResult> DeleteStudent(int id)
         {

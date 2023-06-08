@@ -6,12 +6,12 @@ using StudentsCoursesManager.Helpers;
 
 namespace StudentsCoursesManager.Controllers
 {
-    public class LoginController : Controller
+    public class AuthenticationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEnumerable<User> _users;
         private readonly IConfiguration _configuration;
-        public LoginController(IUnitOfWork unitOfWork, IConfiguration configuration)
+        public AuthenticationController(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _users =   _unitOfWork.UserRepository.GetAll();
@@ -19,7 +19,7 @@ namespace StudentsCoursesManager.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> GetToken([FromBody] LoginModel loginModel)
+        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             var user = _users.FirstOrDefault(u => u.UserName == loginModel.UserName && u.Password == loginModel.Password);
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StudentsCoursesManager.Data.Entities;
@@ -9,6 +10,7 @@ using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Controllers
 {
+    [Authorize(Policy = "AuthenticatedUser")]
     public class CourseController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -45,6 +47,8 @@ namespace StudentsCoursesManager.Controllers
             return Ok(courseModel);
         }
 
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("Create Course")]
         public async Task<IActionResult> CreateCourse([FromBody] CourseModel courseModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
@@ -61,6 +65,8 @@ namespace StudentsCoursesManager.Controllers
             return apiBehaviour.Value.InvalidModelStateResponseFactory(ControllerContext);
         }
 
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("Update Course")]
         public async Task<IActionResult> UpdateCourse(int id, [FromBody] CourseModel courseModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
@@ -82,6 +88,8 @@ namespace StudentsCoursesManager.Controllers
 
         }
 
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete("Delete Course")]
         public async Task<IActionResult> DeleteStudent(int id)
         {

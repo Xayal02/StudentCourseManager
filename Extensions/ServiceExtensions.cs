@@ -14,6 +14,7 @@ using StudentsCoursesManager.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StudentsCoursesManager.Extensions
 {
@@ -59,6 +60,10 @@ namespace StudentsCoursesManager.Extensions
               });
 
             //Authorization rules
+
+            services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();
+            services.AddSingleton<IAuthorizationHandler, IsAuthenticatedUserHandler>();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AuthenticatedUser",

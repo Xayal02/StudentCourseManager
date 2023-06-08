@@ -14,8 +14,10 @@ namespace StudentsCoursesManager.Data.EntityConfigurations
             modelBuilder.Property(u => u.Password)
                        .IsRequired();
 
-            modelBuilder.Property(u=>u.Email)
+            modelBuilder.Property(u => u.Email)
                         .IsRequired();
+                
+
 
             modelBuilder.Property(u => u.FirstName)
                         .HasMaxLength(15)
@@ -31,6 +33,10 @@ namespace StudentsCoursesManager.Data.EntityConfigurations
             modelBuilder.HasIndex(u => u.UserName)
                         .IsUnique()
                         .HasDatabaseName("IX_Username");
+
+            modelBuilder.HasIndex(u => u.Email)
+                       .IsUnique()
+                       .HasDatabaseName("IX_Email");
         }
     }
 }
