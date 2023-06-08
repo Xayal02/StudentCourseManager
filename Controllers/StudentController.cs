@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using StudentsCoursesManager.Data.Common;
@@ -12,6 +13,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudentsCoursesManager.Controllers
 {
+    [Authorize("AdminOnly")]
+
+    //[Authorize(Roles ="Admin")]
     public class StudentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

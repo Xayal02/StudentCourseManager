@@ -11,6 +11,7 @@ namespace StudentsCoursesManager.Data.Common
         public IRepository<Course, int> CourseRepository { get; set; }
         public IRepository<StudentCourse, int> StudentCourseRepository { get; set; }
         public IRepository<Gender, int> GenderRepository { get; set; }
+        public IRepository<User,int> UserRepository { get; set; }
 
 
         public UnitOfWork(DataContext dataContext)
@@ -21,6 +22,7 @@ namespace StudentsCoursesManager.Data.Common
             StudentCourseRepository = new EfRepository<StudentCourse, int>(_dataContext);
             CourseRepository = new EfRepository<Course, int>(_dataContext);
             GenderRepository = new EfRepository<Gender, int>(_dataContext);
+            UserRepository = new EfRepository<User, int>(_dataContext);
         }
 
         public async Task Save()

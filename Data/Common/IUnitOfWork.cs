@@ -9,6 +9,7 @@ namespace StudentsCoursesManager.Data.UnitOfWork
         public IRepository<Course,int> CourseRepository { get; set; }
         public IRepository<StudentCourse,int> StudentCourseRepository { get; set; }
         public IRepository<Gender, int> GenderRepository { get; set; }
+        public IRepository<User,int> UserRepository { get; set; }
 
         public Task Save();
     }

@@ -16,6 +16,7 @@ namespace StudentsCoursesManager.Data.Common
         public DbSet<StudentCourse> StudentCourses { get; set; }
 
         public DbSet<StudentCourse> Genders { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
