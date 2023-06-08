@@ -16,24 +16,14 @@ using StudentsCoursesManager.Validators;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
-Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.File(
-                   System.IO.Path.Combine("D:\\LogFiles", "Practising", "diagnostics.txt"),
-                   rollingInterval: RollingInterval.Day,
-                   fileSizeLimitBytes: 10 * 1024 * 1024, //10 megabayt
-                   retainedFileCountLimit: 30,
-                   rollOnFileSizeLimit: true,
-                   shared: true,
-                   flushToDiskInterval: TimeSpan.FromSeconds(2))
 
-               .CreateLogger();
+
+Log.Logger = new LoggerConfiguration().ConfigureLogger();
+
 try
 {
     Log.Information("Starting web host");
+
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.ConfigureApplication(builder.Configuration);
@@ -41,6 +31,8 @@ try
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    builder.Services.AddLogging();
 
     var app = builder.Build();
 
@@ -74,7 +66,7 @@ catch (Exception ex)
 }
 finally
 {
-    Log.CloseAndFlush();
+    Log.CloseAndFlush(); //dispose logger and the end
 }
 
 
