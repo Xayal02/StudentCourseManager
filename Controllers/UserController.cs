@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentsCoursesManager.Data.Entities;
@@ -7,13 +8,13 @@ using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
     public class UserController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserController(IUnitOfWork unitOfWork, Mapper mapper)
+        public UserController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -24,7 +25,10 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var users = await _unitOfWork.UserRepository.GetAllList();
-            return Ok(users);
+
+            var userModels = users.Select(user => _mapper.Map<UserModel>(user));
+
+            return Ok(userModels);
         }
 
 
@@ -39,12 +43,13 @@ namespace StudentsCoursesManager.Controllers
 
 
         [HttpPost("Create user")]
-        public async Task<IActionResult> CreateUser(UserModel userModel)
+        public async Task<IActionResult> CreateUser([FromBody] UserModel userModel)
         {
             if (await _unitOfWork.UserRepository.Any(user => user.UserName == userModel.UserName)) 
                 return Conflict("User with such username already exist");
 
             var user = _mapper.Map<User>(userModel);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.Save();
@@ -53,7 +58,7 @@ namespace StudentsCoursesManager.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPut("Update User")]
         public async Task<IActionResult> UpdateUser(int userId, UserModel userModel)
         {
             var user = await _unitOfWork.UserRepository.Find(userId);
@@ -66,6 +71,7 @@ namespace StudentsCoursesManager.Controllers
                 return Conflict("Such username has alreary been taken");
 
             _mapper.Map(userModel,user);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             await _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.Save();

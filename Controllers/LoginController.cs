@@ -21,7 +21,8 @@ namespace StudentsCoursesManager.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            var user = _users.FirstOrDefault(u => u.UserName == loginModel.UserName && u.Password == loginModel.Password);
+            var user =_users.FirstOrDefault(u => u.UserName == loginModel.UserName && 
+            BCrypt.Net.BCrypt.Verify(loginModel.Password,u.Password));
 
             if (user is null) return NotFound("Username or password is incorrect");
 
