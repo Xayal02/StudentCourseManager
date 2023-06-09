@@ -17,6 +17,8 @@ namespace StudentsCoursesManager.Data.EntityConfigurations
                 .WithMany(c => c.StudentsCourses)
                 .HasForeignKey(sc => sc.CourseId)
                 .HasConstraintName("FK_Course");
+
+            modelBuilder.HasKey(sc => new { sc.StudentId, sc.CourseId });
         }
     }
 }

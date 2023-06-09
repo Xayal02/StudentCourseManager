@@ -17,6 +17,9 @@ namespace StudentsCoursesManager.Helpers
             CreateMap<StudentCourse, StudentCourseModel>();
             CreateMap<StudentCourseModel, StudentCourse>();
 
+            CreateMap<User, UserModel>();
+            CreateMap<UserModel, User>();
+
         }
     }
 }

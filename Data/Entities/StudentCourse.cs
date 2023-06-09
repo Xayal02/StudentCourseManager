@@ -5,7 +5,6 @@ namespace StudentsCoursesManager.Data.Entities
     public class StudentCourse : BaseEntity<int>
     {
         public override int Id { get; set; }
-
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public Student Student { get; set; }

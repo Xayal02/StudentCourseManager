@@ -30,6 +30,12 @@ namespace StudentsCoursesManager.Data.EntityConfigurations
             modelBuilder.Property(u => u.Role)
                         .IsRequired();
 
+            modelBuilder.Property(u => u.DateOfBirth)
+                       .HasColumnType("Date")
+                       .IsRequired();
+
+            modelBuilder.Ignore(u => u.Age);
+
             modelBuilder.HasIndex(u => u.UserName)
                         .IsUnique()
                         .HasDatabaseName("IX_Username");

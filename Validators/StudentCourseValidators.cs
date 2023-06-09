@@ -32,7 +32,7 @@ namespace StudentsCoursesManager.Data.Validators
             return determiner;
         }
 
-        //check course id is valir or not
+        //check course id is valid or not
         private async Task<bool> IsCourseExistAsync(int courseId, CancellationToken cancellationToken)
         {
             var courses = await _unitOfWork.CourseRepository.GetAllList();

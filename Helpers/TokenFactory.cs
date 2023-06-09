@@ -19,7 +19,8 @@ namespace StudentsCoursesManager.Helpers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.Role,user.Role),
+                new Claim("Age",user.Age.ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
