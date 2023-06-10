@@ -1,96 +1,68 @@
-﻿using AutoMapper;
-using BCrypt.Net;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudentsCoursesManager.Data.Entities;
+using StudentsCoursesManager.Commands.UserCommands;
 using StudentsCoursesManager.Models;
-using StudentsCoursesManager.Persistence;
+using StudentsCoursesManager.Queries.UserQueries;
 
 namespace StudentsCoursesManager.Controllers
 {
-    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     public class UserController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public UserController(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+           _mediator = mediator;
         }
 
 
         [HttpGet("Get users")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _unitOfWork.UserRepository.GetAllList();
-
-            var userModels = users.Select(user => _mapper.Map<UserModel>(user));
-
-            return Ok(userModels);
+            var query = new GetAllUsersQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
 
         [HttpGet("Get user by id")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int userId)
         {
-            var user = await _unitOfWork.UserRepository.Find(id);
-            if (user is null) return NotFound("Such user doesnt exist");
-
-            return Ok(user);
+            var query = new GetUserByIdQuery(userId);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
 
         [HttpPost("Create user")]
         public async Task<IActionResult> CreateUser([FromBody] UserModel userModel)
         {
-            if (await _unitOfWork.UserRepository.Any(user => user.UserName == userModel.UserName)) 
-                return Conflict("User with such username already exist");
+            var command = new CreateUserCommand(userModel);
+            var result = await _mediator.Send(command);
 
-            var user = _mapper.Map<User>(userModel);
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-            await _unitOfWork.UserRepository.Add(user);
-            await _unitOfWork.Save();
-
-            return Ok(user);
+            return result == null ? Conflict("User with such username already exists") : Ok(result);
         }
 
 
         [HttpPut("Update User")]
         public async Task<IActionResult> UpdateUser(int userId, UserModel userModel)
         {
-            var user = await _unitOfWork.UserRepository.Find(userId);
+            var command = new UpdateUserCommand(userId, userModel);
+            var result = _mediator.Send(command);
 
-            if (user is null) return NotFound("User with such Id doesnt exist");
+            return result == null ? Conflict("User with such username already exists") : Ok(result);
 
-            //Check if such username has been taken or not
-            if (userModel.UserName != user.UserName &&
-                await _unitOfWork.UserRepository.Any(user => user.UserName == userModel.UserName))
-                return Conflict("Such username has alreary been taken");
-
-            _mapper.Map(userModel,user);
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-            await _unitOfWork.UserRepository.Update(user);
-            await _unitOfWork.Save();
-
-            return Ok(user);
         }
 
 
         [HttpDelete("Delete User")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
-            var user = await _unitOfWork.UserRepository.Find(userId);
-
-            if (user is null) return NotFound("Such user doesnt exist");
-
-            await _unitOfWork.UserRepository.Delete(user);
-            await _unitOfWork.Save();
-
-            return Ok(user);
+            var command = new DeleteUserCommand(userId);
+            var result = _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

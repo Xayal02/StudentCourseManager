@@ -38,7 +38,7 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> GetCourseByStudentId(int studentId, CancellationToken cancellationToken)
         {
             var query = new GetAllStudentCoursesQueryByStudentId(studentId);
-            var result = _mediator.Send(query);
+            var result = await _mediator.Send(query);
             return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
         }
 
@@ -46,7 +46,7 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> GetCourseByCourseId(int courseId, CancellationToken cancellationToken)
         {
             var query = new GetAllStudentCoursesByCourseIdQuery(courseId);
-            var result = _mediator.Send(query);
+            var result = await _mediator.Send(query);
             return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
 
         }
@@ -57,7 +57,7 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> AddCourse([FromBody] StudentCourseModel studentCourseModel)
         {
             var query = new CreateStudentCourseCommand(studentCourseModel);
-            var result = _mediator.Send(query);
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -66,7 +66,7 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> UpdateCourse(int id, [FromBody] StudentCourseModel studentCourseModel)
         {
             var query = new UpdateStudentCourseCommand(id, studentCourseModel);
-            var result = _mediator.Send(query);
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 
@@ -76,7 +76,7 @@ namespace StudentsCoursesManager.Controllers
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var query = new DeleteStudentCourseCommand(id);
-            var result = _mediator.Send(query);
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
     }

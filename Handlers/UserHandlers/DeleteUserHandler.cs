@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using StudentsCoursesManager.Commands.UserCommands;
+using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Persistence;
 
 namespace StudentsCoursesManager.Handlers.UserHandlers
 {
-    public class DeleteUserHandler:IRequestHandler<DeleteUserCommand>
+    public class DeleteUserHandler:IRequestHandler<DeleteUserCommand,User>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -16,9 +17,13 @@ namespace StudentsCoursesManager.Handlers.UserHandlers
             _mapper = mapper;
         }
 
-        public Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = await _unitOfWork.UserRepository.Find(request.UserId);
+            await _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.Save();
+
+            return user;
         }
     }
 }

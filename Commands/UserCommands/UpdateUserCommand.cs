@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Commands.UserCommands
 {
-    public class UpdateUserCommand:IRequest
+    public class UpdateUserCommand:IRequest<User>
     {
         public int UserId { get; set; }
         public UserModel UserModel{ get; set; }
