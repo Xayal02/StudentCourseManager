@@ -3,8 +3,8 @@ using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Data.UnitOfWork;
 using StudentsCoursesManager.Models;
+using StudentsCoursesManager.Persistence;
 
 namespace StudentsCoursesManager.Controllers
 {

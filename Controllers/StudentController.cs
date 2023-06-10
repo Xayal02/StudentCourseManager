@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using StudentsCoursesManager.Data.Common;
+using StudentsCoursesManager.Commands.StudentCommands;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Data.UnitOfWork;
 using StudentsCoursesManager.Data.Validators;
 using StudentsCoursesManager.Models;
+using StudentsCoursesManager.Persistence;
+using StudentsCoursesManager.Queries.StudentQueries;
 using System.ComponentModel.DataAnnotations;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -16,54 +18,36 @@ namespace StudentsCoursesManager.Controllers
     [Authorize(Policy = "AuthenticatedUser")]
     public class StudentController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IValidator<StudentModel> _validator;
-
-        public StudentController(IUnitOfWork unitOfWork, IMapper mapper, IValidator<StudentModel> validator)
+        private readonly IMediator _mediator;
+        public StudentController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _validator = validator;
+            _mediator = mediator;
 
         }
         [HttpGet("Get Students")]
         public async Task<IActionResult> GetStudents()
         {
-            var students= await _unitOfWork.StudentRepository.GetAllList();
-
-            var studentModels = students.Select(student => _mapper.Map<StudentModel>(student));
-            return Ok(studentModels);
+            var query = new GetAllStudentsQuery();
+            var result = _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("Get Student By Id")]
         public async Task<IActionResult> GetStudentById(int id)
         {
-            var student = await _unitOfWork.StudentRepository.Find(id);
+            var query = new GetStudentByIdQuery(id);
+            var result = _mediator.Send(query);
+            return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
 
-            if (student is null) return NotFound();
-
-            var studentModel =  _mapper.Map<StudentModel>(student);
-
-            return Ok(studentModel);
         }
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("Create Student")]
         public async Task<IActionResult> CreateStudent([FromBody] StudentModel studentModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
-            var validationResult = await _validator.ValidateAsync(studentModel);
-
-            if (validationResult.IsValid)
-            {
-                var student = _mapper.Map<Student>(studentModel);
-
-                await _unitOfWork.StudentRepository.Add(student);
-                await _unitOfWork.Save();
-
-                return Ok(student);
-            }
-            return apiBehaviour.Value.InvalidModelStateResponseFactory(ControllerContext);
+            var query = new CreateStudentCommand(studentModel);
+            var result = _mediator.Send(query);
+            return Ok(result);
         }
 
 
@@ -71,23 +55,9 @@ namespace StudentsCoursesManager.Controllers
         [HttpPut("Update Student")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] StudentModel studentModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
-            var validationResult = await _validator.ValidateAsync(studentModel);
-
-            if (validationResult.IsValid)
-            {
-
-                var student = await _unitOfWork.StudentRepository.Find(id);
-
-                if (student is null) return NotFound();
-
-                _mapper.Map(studentModel, student);
-
-                await _unitOfWork.StudentRepository.Update(student);
-                await _unitOfWork.Save();
-                return Ok(student);
-            }
-            return apiBehaviour.Value.InvalidModelStateResponseFactory(ControllerContext);
-
+            var query = new UpdateStudentCommand(studentModel,id);
+            var result = _mediator.Send(query);
+            return Ok(result);
         }
 
 
@@ -95,14 +65,9 @@ namespace StudentsCoursesManager.Controllers
         [HttpDelete("Delete Student")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = await _unitOfWork.StudentRepository.Find(id);
-
-            if (student is null) return NotFound();
-
-            await _unitOfWork.StudentRepository.Delete(student);
-            await _unitOfWork.Save();
-            return Ok(student);
-
+            var query = new DeleteStudentCommand(id);
+            var result = _mediator.Send(query);
+            return Ok(result);
         }
     }
 }

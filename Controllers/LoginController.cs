@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Data.UnitOfWork;
 using StudentsCoursesManager.Models;
 using StudentsCoursesManager.Helpers;
+using StudentsCoursesManager.Persistence;
 
 namespace StudentsCoursesManager.Controllers
 {
