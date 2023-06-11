@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using StudentsCoursesManager.Helpers.Exceptions;
+using StudentsCoursesManager.Application.Helpers.Exceptions;
 using System.Net;
 using System.Text.Json;
 

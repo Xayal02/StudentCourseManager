@@ -1,38 +1,25 @@
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Events;
-using StudentsCoursesManager.Data.Common;
-using StudentsCoursesManager.Data.UnitOfWork;
-using StudentsCoursesManager.Data.Validators;
 using StudentsCoursesManager.Extensions;
-using StudentsCoursesManager.Helpers;
-using StudentsCoursesManager.Models;
-using StudentsCoursesManager.Repository;
-using StudentsCoursesManager.Validators;
-using System.Reflection;
-using System.Text.Json.Serialization;
+using StudentsCoursesManager.Infrastructure;
 
 
 
-Log.Logger = new LoggerConfiguration().ConfigureLogger();
+Log.Logger = Log.Logger = new LoggerConfiguration().ConfigureLogger();
+
 
 try
 {
-    Log.Information("Starting web host");
+    Log.Information("Starting web host"); 
 
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.ConfigureApplication(builder.Configuration);
 
+   Serilog.Debugging.SelfLog.Enable(Console.Error);
+
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
-    builder.Services.AddLogging();
 
     var app = builder.Build();
 

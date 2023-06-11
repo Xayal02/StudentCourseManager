@@ -1,21 +1,19 @@
-﻿using StudentsCoursesManager.Data.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-using StudentsCoursesManager.Repository;
-using FluentValidation.AspNetCore;
-using StudentsCoursesManager.Data.Common;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using MediatR;
-using StudentsCoursesManager.Validators;
 using System.Reflection;
 using FluentValidation;
-using StudentsCoursesManager.Models;
-using StudentsCoursesManager.Data.Validators;
-using StudentsCoursesManager.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using StudentsCoursesManager.Authorization.Handlers;
+using Microsoft.Extensions.DependencyInjection;
+using StudentsCoursesManager.Application.Authorization.Handlers;
+using StudentsCoursesManager.Infrastructure.Repositories;
+using StudentsCoursesManager.Infrastructure;
+using StudentsCoursesManager.Application.Validators;
+using StudentsCoursesManager.Application.Models;
+using StudentsCoursesManager.Application.Behaviors;
 
 namespace StudentsCoursesManager.Extensions
 {
@@ -34,17 +32,20 @@ namespace StudentsCoursesManager.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
 
-            //Validaton Behaviour
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            //Validation 
+            //services.AddTransient<IValidator<CourseModel>, CourseValidator>();
             services.AddTransient<IValidator<CourseModel>, CourseValidator>();
+
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 
             //For mapping entities
             services.AddAutoMapper(typeof(Program).Assembly);
 
             //Authentication
             var signingKey = configuration["Jwt:SigningKey"];
-
+                
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
               {
@@ -75,6 +76,11 @@ namespace StudentsCoursesManager.Extensions
                     policy => policy.AddRequirements(new IsAllowedToModifyData()));
             });
 
+
+            //Mediator pattern
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            
 
         }
     }

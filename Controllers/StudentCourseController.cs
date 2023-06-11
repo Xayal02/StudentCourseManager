@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using StudentsCoursesManager.Application.Models;
 using StudentsCoursesManager.Commands.StudentCourseCommands;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Data.Validators;
 using StudentsCoursesManager.Handlers.StudentCoursesHandlers;
-using StudentsCoursesManager.Models;
 using StudentsCoursesManager.Persistence;
 using StudentsCoursesManager.Queries.StudentCoursesQueries;
 
