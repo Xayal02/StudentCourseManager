@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using StudentsCoursesManager.Commands.UserCommands;
+using StudentsCoursesManager.Application.Commands.UserCommands;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Infrastructure.Repositories;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.Handlers.UserHandlers
 {
@@ -11,11 +10,13 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CreateUserHandler> _logger;
 
-        public CreateUserHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateUserHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CreateUserHandler> loggger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = loggger;
         }
 
         public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -28,6 +29,7 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
 
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.Save();
+            _logger.LogInformation($"User with id {user.Id} was created");
 
             return user;
         }

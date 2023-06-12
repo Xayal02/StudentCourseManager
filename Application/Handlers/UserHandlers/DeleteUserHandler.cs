@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using StudentsCoursesManager.Commands.UserCommands;
+using StudentsCoursesManager.Application.Commands.UserCommands;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Infrastructure.Repositories;
 
@@ -9,12 +9,13 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
     public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, User>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly ILogger<DeleteUserHandler> _logger;
 
-        public DeleteUserHandler(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public DeleteUserHandler(IUnitOfWork unitOfWork, ILogger<DeleteUserHandler> logger)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -22,6 +23,7 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
             var user = await _unitOfWork.UserRepository.Find(request.UserId);
             await _unitOfWork.UserRepository.Delete(user);
             await _unitOfWork.Save();
+            _logger.LogInformation($"User with id {user.Id} was deleted from database");
 
             return user;
         }

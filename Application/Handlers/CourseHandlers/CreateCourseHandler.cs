@@ -24,8 +24,7 @@ namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
 
             await _unitOfWork.CourseRepository.Add(course);
             await _unitOfWork.Save();
-            _logger.LogWarning("Course created");
-
+            _logger.LogInformation($"Course with id {course.Id} was created");
 
             return course;
 

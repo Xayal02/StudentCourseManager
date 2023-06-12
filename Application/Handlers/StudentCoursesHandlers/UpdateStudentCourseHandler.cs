@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using StudentsCoursesManager.Commands.StudentCourseCommands;
-using StudentsCoursesManager.Data.Validators;
+using StudentsCoursesManager.Application.Commands.StudentCourseCommands;
+using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Infrastructure.Repositories;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
 {
@@ -11,11 +10,13 @@ namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<UpdateStudentCourseHandler> _logger;
 
-        public UpdateStudentCourseHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateStudentCourseHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UpdateStudentCourseHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<Unit> Handle(UpdateStudentCourseCommand request, CancellationToken cancellationToken)
         {
@@ -23,6 +24,7 @@ namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
             _mapper.Map(request.StudentCourseModel, studentCourse);
             await _unitOfWork.StudentCourseRepository.Update(studentCourse);
             await _unitOfWork.Save();
+            _logger.LogInformation($"Student Course with id {studentCourse.Id} was updated");
 
             return Unit.Value;
 

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using StudentsCoursesManager.Commands.StudentCommands;
+using StudentsCoursesManager.Application.Commands.StudentCommands;
 using StudentsCoursesManager.Infrastructure.Repositories;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.Handlers.StudentHandler
 {
@@ -10,11 +9,13 @@ namespace StudentsCoursesManager.Application.Handlers.StudentHandler
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<UpdateStudentHandler> _logger;
 
-        public UpdateStudentHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateStudentHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UpdateStudentHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<Unit> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
@@ -22,6 +23,7 @@ namespace StudentsCoursesManager.Application.Handlers.StudentHandler
             _mapper.Map(request.StudentModel, student);
             await _unitOfWork.StudentRepository.Update(student);
             await _unitOfWork.Save();
+            _logger.LogInformation($"Student with id {student.Id} was updated");
 
             return Unit.Value;
         }

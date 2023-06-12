@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using StudentsCoursesManager.Commands.UserCommands;
+using StudentsCoursesManager.Application.Commands.UserCommands;
 using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Infrastructure.Repositories;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.Handlers.UserHandlers
 {
@@ -11,11 +10,13 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<UpdateUserHandler> _logger;
 
-        public UpdateUserHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateUserHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UpdateUserHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -32,6 +33,7 @@ namespace StudentsCoursesManager.Application.Handlers.UserHandlers
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             await _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.Save();
+            _logger.LogInformation($"User with id {user.Id} was updated");
 
             return user;
         }

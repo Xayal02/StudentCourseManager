@@ -9,11 +9,13 @@ namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<UpdateCourseHandler> _logger;
 
-        public UpdateCourseHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateCourseHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UpdateCourseHandler> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<Unit> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
         {
@@ -24,8 +26,9 @@ namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
 
             await _unitOfWork.CourseRepository.Update(course);
             await _unitOfWork.Save();
-            var value = Unit.Value;
-            return value;
+            _logger.LogInformation($"Course with id {course.Id} was updated");
+
+            return Unit.Value;
         }
     }
 }
