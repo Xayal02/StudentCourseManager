@@ -1,5 +1,5 @@
 # StudentCourseManager
-Project Structure
+## Project Structure
 The project is organized into the following components:
 
 Controllers: There are five controllers available:
