@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Models;
 using StudentsCoursesManager.Application.Models;
 using StudentsCoursesManager.Infrastructure.Repositories;
 using StudentsCoursesManager.Application.Helpers;

@@ -6,7 +6,7 @@ using StudentsCoursesManager.Infrastructure.Repositories;
 
 namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
 {
-    public class UpdateStudentCourseHandler : IRequestHandler<UpdateStudentCourseCommand>
+    public class UpdateStudentCourseHandler : IRequestHandler<UpdateStudentCourseCommand, StudentCourse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -18,15 +18,17 @@ namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<Unit> Handle(UpdateStudentCourseCommand request, CancellationToken cancellationToken)
+        public async Task<StudentCourse> Handle(UpdateStudentCourseCommand request, CancellationToken cancellationToken)
         {
             var studentCourse = await _unitOfWork.StudentCourseRepository.Find(request.Id);
+            if (studentCourse is null) return null;
+            
             _mapper.Map(request.StudentCourseModel, studentCourse);
             await _unitOfWork.StudentCourseRepository.Update(studentCourse);
             await _unitOfWork.Save();
             _logger.LogInformation($"Student Course with id {studentCourse.Id} was updated");
 
-            return Unit.Value;
+            return studentCourse;
 
         }
     }

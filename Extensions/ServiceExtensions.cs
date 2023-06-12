@@ -14,6 +14,7 @@ using StudentsCoursesManager.Infrastructure;
 using StudentsCoursesManager.Application.Validators;
 using StudentsCoursesManager.Application.Models;
 using StudentsCoursesManager.Application.Behaviors;
+using StudentsCoursesManager.Domain.Authorization.Requirements;
 
 namespace StudentsCoursesManager.Extensions
 {

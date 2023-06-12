@@ -1,6 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

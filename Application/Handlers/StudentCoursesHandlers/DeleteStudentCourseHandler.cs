@@ -6,7 +6,7 @@ using StudentsCoursesManager.Infrastructure.Repositories;
 
 namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
 {
-    public class DeleteStudentCourseHandler : IRequestHandler<DeleteStudentCourseCommand>
+    public class DeleteStudentCourseHandler : IRequestHandler<DeleteStudentCourseCommand,StudentCourse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,13 +19,15 @@ namespace StudentsCoursesManager.Application.Handlers.StudentCoursesHandlers
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(DeleteStudentCourseCommand request, CancellationToken cancellationToken)
+        public async Task<StudentCourse> Handle(DeleteStudentCourseCommand request, CancellationToken cancellationToken)
         {
             var studentCourse = await _unitOfWork.StudentCourseRepository.Find(request.Id);
+            if (studentCourse is null) return null;
+
             await _unitOfWork.StudentCourseRepository.Delete(studentCourse);
             await _unitOfWork.Save();
             _logger.LogInformation($"Student Course with id {studentCourse.Id} was deleted from database");
-            return Unit.Value;
+            return studentCourse;
         }
     }
 }

@@ -1,17 +1,9 @@
-﻿using AutoMapper;
-using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using StudentsCoursesManager.Application.Commands.StudentCourseCommands;
 using StudentsCoursesManager.Application.Models;
-using StudentsCoursesManager.Commands.StudentCourseCommands;
-using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Data.Validators;
-using StudentsCoursesManager.Handlers.StudentCoursesHandlers;
-using StudentsCoursesManager.Persistence;
-using StudentsCoursesManager.Queries.StudentCoursesQueries;
+using StudentsCoursesManager.Application.Queries.StudentCoursesQueries;
 
 namespace StudentsCoursesManager.Controllers
 {
@@ -67,7 +59,7 @@ namespace StudentsCoursesManager.Controllers
         {
             var query = new UpdateStudentCourseCommand(id, studentCourseModel);
             var result = await _mediator.Send(query);
-            return Ok(result);
+            return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
         }
 
 
@@ -77,7 +69,7 @@ namespace StudentsCoursesManager.Controllers
         {
             var query = new DeleteStudentCourseCommand(id);
             var result = await _mediator.Send(query);
-            return Ok(result);
+            return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
         }
     }
 

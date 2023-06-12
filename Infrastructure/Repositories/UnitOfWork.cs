@@ -1,5 +1,4 @@
 ﻿using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Repository;
 
 namespace StudentsCoursesManager.Infrastructure.Repositories
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using StudentsCoursesManager.Application.Models;
 using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.AutoMapperProfiles
 {

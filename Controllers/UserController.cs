@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudentsCoursesManager.Application.Commands.UserCommands;
 using StudentsCoursesManager.Application.Models;
-using StudentsCoursesManager.Commands.UserCommands;
-using StudentsCoursesManager.Queries.UserQueries;
+using StudentsCoursesManager.Application.Queries.UserQueries;
 
 namespace StudentsCoursesManager.Controllers
 {

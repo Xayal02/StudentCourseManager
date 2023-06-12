@@ -1,5 +1,4 @@
 ﻿using StudentsCoursesManager.Domain.Common;
-using StudentsCoursesManager.Persistence;
 using System.Linq.Expressions;
 
 namespace StudentsCoursesManager.Infrastructure.Repositories

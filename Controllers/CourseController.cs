@@ -1,21 +1,14 @@
-﻿using AutoMapper;
-using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using StudentsCoursesManager.Application.Commands.CourseCommands;
 using StudentsCoursesManager.Application.Models;
-using StudentsCoursesManager.Commands;
-using StudentsCoursesManager.Commands.CourseCommands;
-using StudentsCoursesManager.Data.Entities;
-using StudentsCoursesManager.Helpers.Exceptions;
-using StudentsCoursesManager.Persistence;
-using StudentsCoursesManager.Queries;
-using StudentsCoursesManager.Queries.CourseQueries;
+using StudentsCoursesManager.Application.Queries.CourseQueries;
 
 namespace StudentsCoursesManager.Controllers
 {
-    //[Authorize(Policy = "AuthenticatedUser")]
+    [Authorize(Policy = "AuthenticatedUser")]
     public class CourseController : Controller
     {
         private readonly IMediator _mediator;
@@ -45,7 +38,7 @@ namespace StudentsCoursesManager.Controllers
         }
 
 
-        //[Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost("Create Course")]
         public async Task<IActionResult> CreateCourse([FromBody] CourseModel courseModel, [FromServices] IOptions<ApiBehaviorOptions> apiBehaviour)
         {
@@ -62,7 +55,7 @@ namespace StudentsCoursesManager.Controllers
         {
             var command = new UpdateCourseCommand(id, courseModel);
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
         }
 
 
@@ -72,7 +65,7 @@ namespace StudentsCoursesManager.Controllers
         {
             var command = new DeleteCourseCommand(id);
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return result != null ? Ok(result) : NotFound("Course with such id doesnt exist");
         }
     }
 }

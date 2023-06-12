@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using StudentsCoursesManager.Application.Models;
-using StudentsCoursesManager.Data.Entities;
+using StudentsCoursesManager.Application.Queries.CourseQueries;
 using StudentsCoursesManager.Infrastructure.Repositories;
-using StudentsCoursesManager.Queries.CourseQueries;
 
 namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
 {

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using StudentsCoursesManager.Models;
+using StudentsCoursesManager.Data.Entities;
 
 namespace StudentsCoursesManager.Application.Commands.StudentCourseCommands
 {
-    public class DeleteStudentCourseCommand : IRequest
+    public class DeleteStudentCourseCommand : IRequest<StudentCourse>
     {
         public int Id { get; set; }
         public DeleteStudentCourseCommand(int id)

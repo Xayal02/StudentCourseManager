@@ -7,7 +7,7 @@ using StudentsCoursesManager.Infrastructure.Repositories;
 
 namespace StudentsCoursesManager.Application.Handlers.StudentHandler
 {
-    public class DeleteStudentHandler : IRequestHandler<DeleteStudentCommand>
+    public class DeleteStudentHandler : IRequestHandler<DeleteStudentCommand, Student>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -19,13 +19,15 @@ namespace StudentsCoursesManager.Application.Handlers.StudentHandler
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<Unit> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
+        public async Task<Student> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
         {
             var student = await _unitOfWork.StudentRepository.Find(request.Id);
+            if (student is null) return null;
+
             await _unitOfWork.StudentRepository.Delete(student);
             await _unitOfWork.Save();
             _logger.LogInformation($"Student with id {student.Id} was deleted from database");
-            return Unit.Value;
+            return student;
         }
     }
 }

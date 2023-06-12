@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using StudentsCoursesManager.Application.Commands.CourseCommands;
+using StudentsCoursesManager.Data.Entities;
 using StudentsCoursesManager.Infrastructure.Repositories;
 
 namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
 {
-    public class DeleteCourseHandler : IRequestHandler<DeleteCourseCommand>
+    public class DeleteCourseHandler : IRequestHandler<DeleteCourseCommand,Course>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -17,13 +18,16 @@ namespace StudentsCoursesManager.Application.Handlers.CourseHandlers
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<Unit> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
+        public async Task<Course> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
         {
             var course = await _unitOfWork.CourseRepository.Find(request.Id);
+            if (course is null) return null;
+
             await _unitOfWork.CourseRepository.Delete(course);
             await _unitOfWork.Save();
-            _logger.LogInformation($"Course with id {course.Id} was deleted from database"); 
-            return Unit.Value;
+            _logger.LogInformation($"Course with id {course.Id} was deleted from database");
+            return course;
+            
         }
     }
 }

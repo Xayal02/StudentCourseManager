@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using StudentsCoursesManager.Authorization.Requirements;
 using StudentsCoursesManager.Domain.Authorization.Requirements;
 
 namespace StudentsCoursesManager.Application.Authorization.Handlers

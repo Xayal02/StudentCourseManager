@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using StudentsCoursesManager.Helpers.Exceptions;
 
 namespace StudentsCoursesManager.Application.Behaviors
 {

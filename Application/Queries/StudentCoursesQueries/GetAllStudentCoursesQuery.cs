@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using StudentsCoursesManager.Models;
 
 namespace StudentsCoursesManager.Application.Queries.StudentCoursesQueries
 {
