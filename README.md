@@ -15,7 +15,7 @@ CQRS Pattern: The Command Query Responsibility Segregation (CQRS) pattern is use
 
 Authentication and Authorization: The project implements a secure authentication system that ensures only authenticated users can access certain resources. Additionally, it includes role-based authorization to restrict specific actions to privileged users.
 
-#Getting Started
+Getting Started
 To run this project locally, follow these steps:
 
 Clone the repository from GitHub:
